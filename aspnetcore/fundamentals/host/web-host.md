@@ -4,7 +4,7 @@ author: guardrex
 description: Learn about the web host in ASP.NET Core, which is responsible for app startup and lifetime management.
 ms.author: riande
 ms.custom: mvc
-ms.date: 09/01/2018
+ms.date: 10/18/2018
 uid: fundamentals/host/web-host
 ---
 # ASP.NET Core Web Host
@@ -40,10 +40,10 @@ public class Program
 * Loads [host configuration](#host-configuration-values) from:
   * Environment variables prefixed with `ASPNETCORE_` (for example, `ASPNETCORE_ENVIRONMENT`).
   * Command-line arguments.
-* Loads app configuration from:
+* Loads app configuration in the following order from:
   * *appsettings.json*.
   * *appsettings.{Environment}.json*.
-  * [User secrets](xref:security/app-secrets) when the app runs in the `Development` environment using the entry assembly.
+  * [Secret Manager](xref:security/app-secrets) when the app runs in the `Development` environment using the entry assembly.
   * Environment variables.
   * Command-line arguments.
 * Configures [logging](xref:fundamentals/logging/index) for console and debug output. Logging includes [log filtering](xref:fundamentals/logging/index#log-filtering) rules specified in a Logging configuration section of an *appsettings.json* or *appsettings.{Environment}.json* file.
@@ -178,7 +178,7 @@ The [IHostingEnvironment.ApplicationName](/dotnet/api/microsoft.extensions.hosti
 **Type**: *string*  
 **Default**: The name of the assembly containing the app's entry point.  
 **Set using**: `UseSetting`  
-**Environment variable**: `ASPNETCORE_APPLICATIONKEY`
+**Environment variable**: `ASPNETCORE_APPLICATIONNAME`
 
 ::: moniker range=">= aspnetcore-2.1"
 
@@ -360,15 +360,13 @@ WebHost.CreateDefaultBuilder(args)
 
 ### Hosting Startup Exclude Assemblies
 
-DESCRIPTION
+A semicolon-delimited string of hosting startup assemblies to exclude on startup.
 
 **Key**: hostingStartupExcludeAssemblies  
 **Type**: *string*  
 **Default**: Empty string  
 **Set using**: `UseSetting`  
 **Environment variable**: `ASPNETCORE_HOSTINGSTARTUPEXCLUDEASSEMBLIES`
-
-A semicolon-delimited string of hosting startup assemblies to exclude on startup.
 
 ```csharp
 WebHost.CreateDefaultBuilder(args)

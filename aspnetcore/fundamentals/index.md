@@ -69,9 +69,11 @@ For more information, see <xref:fundamentals/startup>.
 
 The content root is the base path to any content used by the app, such as [Razor Pages](xref:razor-pages/index), MVC views, and static assets. By default, the content root is the same location as the app base path for the executable hosting the app.
 
-## Web root
+## Web root (webroot)
 
-The web root of an app is the directory in the project containing public, static resources, such as CSS, JavaScript, and image files.
+The webroot of an app is the directory in the project containing public, static resources, such as CSS, JavaScript, and image files. By default, *wwwroot* is the webroot.
+
+For Razor (*.cshtml*) files, the tilde-slash  `~/` points to the webroot. Paths beginning with `~/` are referred to as virtual paths.
 
 ## Dependency injection (services)
 
@@ -113,7 +115,7 @@ For more information, see <xref:fundamentals/host/index>.
 
 ## Servers
 
-The ASP.NET Core hosting model doesn't directly listen for requests. The hosting model relies on an HTTP server implementation to forward the request to the app. The forwarded request is wrapped as a set of feature objects that can be accessed through interfaces. ASP.NET Core includes a managed, cross-platform web server, called [Kestrel](xref:fundamentals/servers/kestrel). Kestrel is commonly run behind a production web server, such as [IIS](https://www.iis.net/) or [Nginx](http://nginx.org) in a reverse proxy configuration. Kestrel can also be run as an edge server exposed directly to the Internet in ASP.NET Core 2.0 or later.
+The ASP.NET Core hosting model doesn't directly listen for requests. The hosting model relies on an HTTP server implementation to forward the request to the app. The forwarded request is wrapped as a set of feature objects that can be accessed through interfaces. ASP.NET Core includes a managed, cross-platform web server, called [Kestrel](xref:fundamentals/servers/kestrel). Kestrel is commonly run behind a production web server, such as [IIS](https://www.iis.net/) or [Nginx](http://nginx.org) in a reverse proxy configuration. Kestrel can also be run as a public-facing edge server exposed directly to the Internet in ASP.NET Core 2.0 or later.
 
 For more information, see <xref:fundamentals/servers/index>.
 

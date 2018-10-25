@@ -11,7 +11,7 @@ uid: fundamentals/routing
 
 By [Ryan Nowak](https://github.com/rynowak), [Steve Smith](https://ardalis.com/), and [Rick Anderson](https://twitter.com/RickAndMSFT)
 
-Routing functionality is responsible for mapping an incoming request to a route handler. Routes are defined in the app and configured when the app starts. A route can optionally extract values from the URL contained in the request, and these values can then be used for request processing. Using route information from the app, the routing functionality is also able to generate URLs that map to route handlers. Therefore, routing can find a route handler based on a URL or the URL corresponding to a given route handler based on route handler information.
+Routing functionality is responsible for mapping an incoming request to a route handler. Routes are defined in the app and configured when the app starts. A route can optionally extract values from the URL contained in the request, and these values can then be used for request processing. Using route information from the app, the routing functionality is also able to generate URLs that map to route handlers. Therefore, routing can find a route handler based on a URL, or find the URL corresponding to a given route handler based on route handler information.
 
 > [!IMPORTANT]
 > This document covers low-level ASP.NET Core routing. For information on ASP.NET Core MVC routing, see <xref:mvc/controllers/routing>.
@@ -41,7 +41,7 @@ A match during `RouteAsync` also sets the properties of the `RouteContext.RouteD
 
 [RouteData.Values](xref:Microsoft.AspNetCore.Routing.RouteData.Values*) is a dictionary of *route values* produced from the route. These values are usually determined by tokenizing the URL and can be used to accept user input or to make further dispatching decisions inside the app.
 
-[RouteData.DataTokens](xref:Microsoft.AspNetCore.Routing.RouteData.DataTokens*) is a property bag of additional data related to the matched route. `DataTokens` are provided to support associating state data with each route so that the app can make decisions later based on which route matched. These values are developer-defined and do **not** affect the behavior of routing in any way. Additionally, values stashed in data tokens can be of any type, in contrast to route values, which must be easily convertible to and from strings.
+[RouteData.DataTokens](xref:Microsoft.AspNetCore.Routing.RouteData.DataTokens*) is a property bag of additional data related to the matched route. `DataTokens` are provided to support associating state data with each route so that the app can make decisions later based on which route matched. These values are developer-defined and do **not** affect the behavior of routing in any way. Additionally, values stashed in `RouteData.DataTokens` can be of any type, in contrast to `RouteData.Values`, which must be easily convertible to and from strings.
 
 [RouteData.Routers](xref:Microsoft.AspNetCore.Routing.RouteData.Routers*) is a list of the routes that took part in successfully matching the request. Routes can be nested inside of one another. The `Routers` property reflects the path through the logical tree of routes that resulted in a match. Generally, the first item in `Routers` is the route collection and should be used for URL generation. The last item in `Routers` is the route handler that matched.
 
@@ -57,7 +57,7 @@ The primary inputs to `GetVirtualPath` are:
 * [VirtualPathContext.Values](xref:Microsoft.AspNetCore.Routing.VirtualPathContext.Values*)
 * [VirtualPathContext.AmbientValues](xref:Microsoft.AspNetCore.Routing.VirtualPathContext.AmbientValues*)
 
-Routes primarily use the route values provided by the `Values` and `AmbientValues` to decide where it's possible to generate a URL and what values to include. The `AmbientValues` are the set of route values that were produced from matching the current request with the routing system. In contrast, `Values` are the route values that specify how to generate the desired URL for the current operation. The `HttpContext` is provided in case a route needs to obtain services or additional data associated with the current context.
+Routes primarily use the route values provided by the `Values` and `AmbientValues` to decide whether it's possible to generate a URL and what values to include. The `AmbientValues` are the set of route values that were produced from matching the current request with the routing system. In contrast, `Values` are the route values that specify how to generate the desired URL for the current operation. The `HttpContext` is provided in case a route needs to obtain services or additional data associated with the current context.
 
 > [!TIP]
 > Think of [VirtualPathContext.Values](xref:Microsoft.AspNetCore.Routing.VirtualPathContext.Values*) as being a set of overrides for the [VirtualPathContext.AmbientValues](xref:Microsoft.AspNetCore.Routing.VirtualPathContext.AmbientValues*). URL generation attempts to reuse route values from the current request to make it easy to generate URLs for links using the same route or route values.
@@ -385,7 +385,15 @@ To constrain a parameter to a known set of possible values, use a regular expres
 
 ## Parameter transformer reference
 
-Parameter transformers execute when generating a link for a `Route`. Parameter transformers take the parameter's route value and transform it to a new string value. The transformed value is used in the generated link. For example, a custom `slugify` parameter transformer in route pattern `blog\{article:slugify}` with `Url.Action(new { article = "MyTestArticle" })` generates `blog\my-test-article`. Parameter transformers implement `Microsoft.AspNetCore.Routing.IOutboundParameterTransformer` and are configured using <xref:Microsoft.AspNetCore.Routing.RouteOptions.ConstraintMap>.
+Parameter transformers:
+
+* Execute when generating a link for a `Route`.
+* Implement `Microsoft.AspNetCore.Routing.IOutboundParameterTransformer`.
+* Are configured using <xref:Microsoft.AspNetCore.Routing.RouteOptions.ConstraintMap>.
+* Take the parameter's route value and transform it to a new string value.
+* The transformed value is used in the generated link.
+
+For example, a custom `slugify` parameter transformer in route pattern `blog\{article:slugify}` with `Url.Action(new { article = "MyTestArticle" })` generates `blog\my-test-article`.
 
 Parameter transformers are also used by frameworks to transform the URI to which an endpoint resolves. For example, ASP.NET Core MVC uses parameter transformers to transform the route value used to match an `area`, `controller`, `action`, and `page`.
 
@@ -397,7 +405,10 @@ routes.MapRoute(
 
 With the preceding route, the action `SubscriptionManagementController.GetAll()` is matched with the URI `/subscription-management/get-all`. A parameter transformer doesn't change the route values used to generate a link. `Url.Action("GetAll", "SubscriptionManagement")` outputs `/subscription-management/get-all`.
 
-ASP.NET Core MVC also comes with the `Microsoft.AspNetCore.Mvc.ApplicationModels.RouteTokenTransformerConvention` API convention. The convention applies a specified parameter transformer to all attribute route tokens in the app.
+ASP.NET Core provides API conventions for using a parameter transformers with generated routes:
+
+* ASP.NET Core MVC has the `Microsoft.AspNetCore.Mvc.ApplicationModels.RouteTokenTransformerConvention` API convention. This convention applies a specified parameter transformer to all attribute routes in the app. The parameter transformer transforms attribute route tokens as they are replaced. For more information, see [Use a parameter transformer to customize token replacement](/aspnet/core/mvc/controllers/routing#use-a-parameter-transformer-to-customize-token-replacement).
+* Razor pages has the `Microsoft.AspNetCore.Mvc.ApplicationModels.PageRouteTransformerConvention` API convention. This convention applies a specified parameter transformer to all automatically discovered Razor pages. The parameter transformer transforms the folder and file name segments of Razor page routes. For more information, see [Use a parameter transformer to customize page routes](/aspnet/core/razor-pages/razor-pages-conventions#use-a-parameter-transformer-to-customize-page-routes).
 
 ::: moniker-end
 

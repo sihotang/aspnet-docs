@@ -5,7 +5,7 @@ description: Learn how to use the Azure Key Vault Configuration Provider to conf
 monikerRange: '>= aspnetcore-1.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 08/01/2018
+ms.date: 10/24/2018
 uid: security/key-vault-configuration
 ---
 # Azure Key Vault configuration provider in ASP.NET Core
@@ -57,6 +57,48 @@ When you run the app, a webpage shows the loaded secret values:
 
 ![Browser window showing secret values loaded via the Azure Key Vault Configuration Provider](key-vault-configuration/_static/sample1.png)
 
+## Bind an array to a class
+
+The provider is capable of reading configuration values into an array for binding to a POCO array.
+
+When reading from a configuration source that allows keys to contain colon (`:`) separators, a numeric key segment is used to distinguish the keys that make up an array (`:0:`, `:1:`, … `:{n}:`). For more information, see [Configuration: Bind an array to a class](xref:fundamentals/configuration/index#bind-an-array-to-a-class).
+
+Azure Key Vault keys can't use a colon as a separator. The approach described in this topic uses double dashes (`--`) as a separator for hierarchical values (sections). Array keys are stored in Azure Key Vault with double dashes and numeric key segments (`--0--`, `--1--`, … `--{n}--`).
+
+Examine the following [Serilog](https://serilog.net/) logging provider configuration provided by a JSON file. There are two object literals defined in the `WriteTo` array that reflect two Serilog *sinks*, which describe destinations for logging output:
+
+```json
+"Serilog": {
+  "WriteTo": [
+    {
+      "Name": "AzureTableStorage",
+      "Args": {
+        "storageTableName": "logs",
+        "connectionString": "DefaultEnd...ountKey=Eby8...GMGw=="
+      }
+    },
+    {
+      "Name": "AzureDocumentDB",
+      "Args": {
+        "endpointUrl": "https://contoso.documents.azure.com:443",
+        "authorizationKey": "Eby8...GMGw=="
+      }
+    }
+  ]
+}
+```
+
+The configuration shown in the preceding JSON file is stored in Azure Key Vault using double dash (`--`) notation and numeric segments:
+
+| Key | Value |
+| --- | ----- |
+| `Serilog--WriteTo--0--Name` | `AzureTableStorage` |
+| `Serilog--WriteTo--0--Args--storageTableName` | `logs` |
+| `Serilog--WriteTo--0--Args--connectionString` | `DefaultEnd...ountKey=Eby8...GMGw==` |
+| `Serilog--WriteTo--1--Name` | `AzureDocumentDB` |
+| `Serilog--WriteTo--1--Args--endpointUrl` | `https://contoso.documents.azure.com:443` |
+| `Serilog--WriteTo--1--Args--authorizationKey` | `Eby8...GMGw==` |
+
 ## Create prefixed key vault secrets and load configuration values (key-name-prefix-sample)
 
 `AddAzureKeyVault` also provides an overload that accepts an implementation of `IKeyVaultSecretManager`, which allows you to control how key vault secrets are converted into configuration keys. For example, you can implement the interface to load secret values based on a prefix value you provide at app startup. This allows you, for example, to load secrets based on the version of the app.
@@ -103,7 +145,7 @@ When you implement this approach:
 
 Use the [Secret Manager tool](xref:security/app-secrets) to maintain the `ClientSecret` outside of your project source tree. With Secret Manager, you associate app secrets with a specific project and share them across multiple projects.
 
-When developing a .NET Framework app in an environment that supports certificates, you can authenticate to Azure Key Vault with an X.509 certificate. The X.509 certificate's private key is managed by the OS. For more information, see [Authenticate with a Certificate instead of a Client Secret](https://docs.microsoft.com/azure/key-vault/key-vault-use-from-web-application#authenticate-with-a-certificate-instead-of-a-client-secret). Use the `AddAzureKeyVault` overload that accepts an `X509Certificate2` (`_env` in the following example :
+When developing a .NET Framework app in an environment that supports certificates, you can authenticate to Azure Key Vault with an X.509 certificate. The X.509 certificate's private key is managed by the OS. For more information, see [Authenticate with a Certificate instead of a Client Secret](/azure/key-vault/key-vault-use-from-web-application#authenticate-with-a-certificate-instead-of-a-client-secret). Use the `AddAzureKeyVault` overload that accepts an `X509Certificate2` (`_env` in the following example :
 
 ```csharp
 var builtConfig = config.Build();
