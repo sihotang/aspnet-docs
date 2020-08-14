@@ -1,10 +1,11 @@
 ---
-title: DevOps with ASP.NET Core and Azure | Next steps
+title: Next steps - DevOps with ASP.NET Core and Azure
 author: CamSoper
-description: A guide that provides end-to-end guidance on building a DevOps pipeline for an ASP.NET Core app hosted in Azure.
+description: Additional learning paths for DevOps with ASP.NET Core and Azure.
 ms.author: casoper
-ms.custom: mvc
+ms.custom: "devx-track-csharp, mvc, seodec18"
 ms.date: 10/24/2018
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: azure/devops/next-steps
 ---
 # Next steps

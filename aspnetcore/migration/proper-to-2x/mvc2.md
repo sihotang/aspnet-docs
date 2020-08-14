@@ -5,6 +5,7 @@ description: Receive guidance for migrating existing ASP.NET MVC or Web API appl
 ms.author: scaddie
 ms.custom: mvc
 ms.date: 10/24/2018
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: migration/mvc2
 ---
 # Migrate from ASP.NET to ASP.NET Core 2.0
@@ -15,7 +16,7 @@ This article serves as a reference guide for migrating ASP.NET applications to A
 
 ## Prerequisites
 
-Install **one** of the following from [.NET Downloads: Windows](https://www.microsoft.com/net/download/windows):
+Install **one** of the following from [.NET Downloads: Windows](https://dotnet.microsoft.com/download):
 
 * .NET Core SDK
 * Visual Studio for Windows
@@ -54,7 +55,7 @@ ASP.NET Core introduced a new mechanism for bootstrapping an app. The entry poin
 
 [!code-csharp[](samples/globalasax-sample.cs)]
 
-This approach couples the application and the server to which it's deployed in a way that interferes with the implementation. In an effort to decouple, [OWIN](http://owin.org/) was introduced to provide a cleaner way to use multiple frameworks together. OWIN provides a pipeline to add only the modules needed. The hosting environment takes a [Startup](xref:fundamentals/startup) function to configure services and the app's request pipeline. `Startup` registers a set of middleware with the application. For each request, the application calls each of the middleware components with the head pointer of a linked list to an existing set of handlers. Each middleware component can add one or more handlers to the request handling pipeline. This is accomplished by returning a reference to the handler that's the new head of the list. Each handler is responsible for remembering and invoking the next handler in the list. With ASP.NET Core, the entry point to an application is `Startup`, and you no longer have a dependency on *Global.asax*. When using OWIN with .NET Framework, use something like the following as a pipeline:
+This approach couples the application and the server to which it's deployed in a way that interferes with the implementation. In an effort to decouple, [OWIN](https://owin.org/) was introduced to provide a cleaner way to use multiple frameworks together. OWIN provides a pipeline to add only the modules needed. The hosting environment takes a [Startup](xref:fundamentals/startup) function to configure services and the app's request pipeline. `Startup` registers a set of middleware with the application. For each request, the application calls each of the middleware components with the head pointer of a linked list to an existing set of handlers. Each middleware component can add one or more handlers to the request handling pipeline. This is accomplished by returning a reference to the handler that's the new head of the list. Each handler is responsible for remembering and invoking the next handler in the list. With ASP.NET Core, the entry point to an application is `Startup`, and you no longer have a dependency on *Global.asax*. When using OWIN with .NET Framework, use something like the following as a pipeline:
 
 [!code-csharp[](samples/webapi-owin.cs)]
 
@@ -66,7 +67,7 @@ ASP.NET Core uses a similar approach, but doesn't rely on OWIN to handle the ent
 
 `Startup` must include a `Configure` method. In `Configure`, add the necessary middleware to the pipeline. In the following example (from the default web site template), several extension methods are used to configure the pipeline with support for:
 
-* [BrowserLink](http://vswebessentials.com/features/browserlink)
+* [BrowserLink](https://vswebessentials.com/features/browserlink)
 * Error pages
 * Static files
 * ASP.NET Core MVC
@@ -102,10 +103,10 @@ The app reads from `Configuration` to get the settings:
 
 There are extensions to this approach to make the process more robust, such as using [Dependency Injection](xref:fundamentals/dependency-injection) (DI) to load a service with these values. The DI approach provides a strongly-typed set of configuration objects.
 
-````csharp
+```csharp
 // Assume AppConfiguration is a class representing a strongly-typed version of AppConfiguration section
 services.Configure<AppConfiguration>(Configuration.GetSection("AppConfiguration"));
-````
+```
 
 **Note:** For a more in-depth reference to ASP.NET Core configuration, see <xref:fundamentals/configuration/index>.
 
@@ -117,15 +118,15 @@ In ASP.NET applications, developers rely on a third-party library to implement d
 
 An example of setting up dependency injection with Unity is implementing `IDependencyResolver` that wraps a `UnityContainer`:
 
-[!code-csharp[](../../../aspnet/web-api/overview/advanced/dependency-injection/samples/sample8.cs)]
+[!code-csharp[](samples/sample8.cs)]
 
 Create an instance of your `UnityContainer`, register your service, and set the dependency resolver of `HttpConfiguration` to the new instance of `UnityResolver` for your container:
 
-[!code-csharp[](../../../aspnet/web-api/overview/advanced/dependency-injection/samples/sample9.cs)]
+[!code-csharp[](samples/sample9.cs)]
 
 Inject `IProductRepository` where needed:
 
-[!code-csharp[](../../../aspnet/web-api/overview/advanced/dependency-injection/samples/sample5.cs)]
+[!code-csharp[](samples/sample5.cs)]
 
 Because dependency injection is part of ASP.NET Core, you can add your service in the `Startup.ConfigureServices`:
 
@@ -143,7 +144,7 @@ In ASP.NET, static files are stored in various directories and referenced in the
 
 In ASP.NET Core, static files are stored in the "web root" (*&lt;content root&gt;/wwwroot*), unless configured otherwise. The files are loaded into the request pipeline by invoking the `UseStaticFiles` extension method from `Startup.Configure`:
 
-[!code-csharp[](../../fundamentals/static-files/samples/1x/StartupStaticFiles.cs?highlight=3&name=snippet_ConfigureMethod)]
+[!code-csharp[](../../fundamentals/static-files/samples/1.x/StaticFilesSample/StartupStaticFiles.cs?highlight=3&name=snippet_ConfigureMethod)]
 
 **Note:** If targeting .NET Framework, install the NuGet package `Microsoft.AspNetCore.StaticFiles`.
 

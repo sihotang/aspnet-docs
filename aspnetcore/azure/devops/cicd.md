@@ -1,9 +1,11 @@
 ---
-title: DevOps with ASP.NET Core and Azure | Continuous integration and deployment
+title: Continuous integration and deployment - DevOps with ASP.NET Core and Azure
 author: CamSoper
-description: A guide that provides end-to-end guidance on building a DevOps pipeline for an ASP.NET Core app hosted in Azure.
+description: Continuous integration and deployment in DevOps with ASP.NET Core and Azure
 ms.author: scaddie
 ms.date: 10/24/2018
+ms.custom: "devx-track-csharp, mvc, seodec18"
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: azure/devops/cicd
 ---
 # Continuous integration and deployment
@@ -32,17 +34,23 @@ In this section, you'll complete the following tasks:
 1. Click the **Create repository** button.
 1. Open your local machine's command shell. Navigate to the directory in which the *simple-feed-reader* Git repository is stored.
 1. Rename the existing *origin* remote to *upstream*. Execute the following command:
+
     ```console
     git remote rename origin upstream
     ```
+
 1. Add a new *origin* remote pointing to your copy of the repository on GitHub. Execute the following command:
+
     ```console
     git remote add origin https://github.com/<GitHub_username>/simple-feed-reader/
     ```
+
 1. Publish your local Git repository to the newly created GitHub repository. Execute the following command:
+
     ```console
     git push -u origin master
     ```
+
 1. Open a browser window, and navigate to `https://github.com/<GitHub_username>/simple-feed-reader/`. Validate that your code appears in the GitHub repository.
 
 ## Disconnect local Git deployment
@@ -53,9 +61,9 @@ Remove the local Git deployment with the following steps. Azure Pipelines (an Az
 
     ![staging Web App search term](media/cicd/portal-search-box.png)
 
-1. Click **Deployment options**. A new panel appears. Click **Disconnect** to remove the local Git source control configuration that was added in the previous chapter. Confirm the removal operation by clicking the **Yes** button.
+1. Click **Deployment Center**. A new panel appears. Click **Disconnect** to remove the local Git source control configuration that was added in the previous chapter. Confirm the removal operation by clicking the **Yes** button.
 1. Navigate to the *mywebapp<unique_number>* App Service. As a reminder, the portal's search box can be used to quickly locate the App Service.
-1. Click **Deployment options**. A new panel appears. Click **Disconnect** to remove the local Git source control configuration that was added in the previous chapter. Confirm the removal operation by clicking the **Yes** button.
+1. Click **Deployment Center**. A new panel appears. Click **Disconnect** to remove the local Git source control configuration that was added in the previous chapter. Confirm the removal operation by clicking the **Yes** button.
 
 ## Create an Azure DevOps organization
 
@@ -185,6 +193,7 @@ There are three distinct steps to complete. Completing the steps in the followin
     ```console
     git commit -a -m "upgraded to V4"
     ```
+
 1. Push the change in the *master* branch to the *origin* remote of your GitHub repository:
 
     ```console
@@ -229,15 +238,15 @@ The build definition's **Tasks** tab lists the individual steps being used. Ther
 
 Click the build definition's **Summary** link to view a history of builds with the definition:
 
-![build definition history](media/cicd/build-definition-summary.png)
+![Screenshot showing build definition history](media/cicd/build-definition-summary.png)
 
 On the resulting page, click the link corresponding to the unique build number:
 
-![build definition summary page](media/cicd/build-definition-completed.png)
+![Screenshot showing build definition summary page](media/cicd/build-definition-completed.png)
 
 A summary of this specific build is displayed. Click the **Artifacts** tab, and notice the *drop* folder produced by the build is listed:
 
-![build definition artifacts - drop folder](media/cicd/build-definition-artifacts.png)
+![Screenshot showing build definition artifacts - drop folder](media/cicd/build-definition-artifacts.png)
 
 Use the **Download** and **Explore** links to inspect the published artifacts.
 
@@ -245,27 +254,27 @@ Use the **Download** and **Explore** links to inspect the published artifacts.
 
 A release pipeline was created with the name *MyFirstProject-ASP.NET Core-CD*:
 
-![release pipeline overview](media/cicd/release-definition-overview.png)
+![Screenshot showing release pipeline overview](media/cicd/release-definition-overview.png)
 
 The two major components of the release pipeline are the **Artifacts** and the **Environments**. Clicking the box in the **Artifacts** section reveals the following panel:
 
-![release pipeline artifacts](media/cicd/release-definition-artifacts.png)
+![Screenshot showing release pipeline artifacts](media/cicd/release-definition-artifacts.png)
 
 The **Source (Build definition)** value represents the build definition to which this release pipeline is linked. The *.zip* file produced by a successful run of the build definition is provided to the *Production* environment for deployment to Azure. Click the *1 phase, 2 tasks* link in the *Production* environment box to view the release pipeline tasks:
 
-![release pipeline tasks](media/cicd/release-definition-tasks.png)
+![Screenshot showing release pipeline tasks](media/cicd/release-definition-tasks.png)
 
 The release pipeline consists of two tasks: *Deploy Azure App Service to Slot* and *Manage Azure App Service - Slot Swap*. Clicking the first task reveals the following task configuration:
 
-![release pipeline deploy task](media/cicd/release-definition-task1.png)
+![Screenshot showing release pipeline deploy task](media/cicd/release-definition-task1.png)
 
 The Azure subscription, service type, web app name, resource group, and deployment slot are defined in the deployment task. The **Package or folder** textbox holds the *.zip* file path to be extracted and deployed to the *staging* slot of the *mywebapp\<unique_number\>* web app.
 
 Clicking the slot swap task reveals the following task configuration:
 
-![release pipeline slot swap task](media/cicd/release-definition-task2.png)
+![Screenshot showing release pipeline slot swap task](media/cicd/release-definition-task2.png)
 
-The subscription, resource group, service type, web app name, and deployment slot details are provided. The **Swap with Production** checkbox is checked. Consequently, the bits deployed to the *staging* slot are swapped into the production environment.
+The subscription, resource group, service type, web app name, and deployment slot details are provided. The **Swap with Production** check box is checked. Consequently, the bits deployed to the *staging* slot are swapped into the production environment.
 
 ## Additional reading
 

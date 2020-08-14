@@ -5,11 +5,12 @@ description: Learn how to use the Cache Tag Helper.
 ms.author: riande
 ms.custom: mvc
 ms.date: 10/10/2018
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: mvc/views/tag-helpers/builtin-th/cache-tag-helper
 ---
 # Cache Tag Helper in ASP.NET Core MVC
 
-By [Peter Kellner](http://peterkellner.net) and [Luke Latham](https://github.com/guardrex) 
+By [Peter Kellner](https://peterkellner.net)
 
 The Cache Tag Helper provides the ability to improve the performance of your ASP.NET Core app by caching its content to the internal ASP.NET Core cache provider.
 
@@ -129,7 +130,7 @@ The following example monitors the values of `Make` and `Model`. The example cac
 | -------------- | -------------------- |
 | String         | `Make`, `Make,Model` |
 
-`vary-by-route` accepts a comma-delimited list of header values that trigger a cache refresh when the route data parameter value changes.
+`vary-by-route` accepts a comma-delimited list of route parameter names that trigger a cache refresh when the route data parameter value changes.
 
 Example:
 
@@ -155,7 +156,7 @@ routes.MapRoute(
 | -------------- | -------------------------------------------------------------------------------- |
 | String         | `.AspNetCore.Identity.Application`, `.AspNetCore.Identity.Application,HairColor` |
 
-`vary-by-cookie` accepts a comma-delimited list of header values that trigger a cache refresh when the header values change.
+`vary-by-cookie` accepts a comma-delimited list of cookie names that trigger a cache refresh when the cookie values change.
 
 The following example monitors the cookie associated with ASP.NET Core Identity. When a user is authenticated, a change in the Identity cookie triggers a cache refresh:
 

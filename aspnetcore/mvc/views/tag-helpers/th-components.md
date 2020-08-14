@@ -4,7 +4,8 @@ author: scottaddie
 description: Learn what Tag Helper Components are and how to use them in ASP.NET Core.
 monikerRange: '>= aspnetcore-2.0'
 ms.author: scaddie
-ms.date: 09/18/2018
+ms.date: 06/12/2019
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: mvc/views/tag-helpers/th-components
 ---
 # Tag Helper Components in ASP.NET Core
@@ -15,7 +16,7 @@ A Tag Helper Component is a Tag Helper that allows you to conditionally modify o
 
 ASP.NET Core includes two built-in Tag Helper Components: `head` and `body`. They're located in the <xref:Microsoft.AspNetCore.Mvc.Razor.TagHelpers> namespace and can be used in both MVC and Razor Pages. Tag Helper Components don't require registration with the app in *_ViewImports.cshtml*.
 
-[View or download sample code](https://github.com/aspnet/Docs/tree/master/aspnetcore/mvc/views/tag-helpers/th-components/samples) ([how to download](xref:tutorials/index#how-to-download-a-sample))
+[View or download sample code](https://github.com/dotnet/AspNetCore.Docs/tree/master/aspnetcore/mvc/views/tag-helpers/th-components/samples) ([how to download](xref:index#how-to-download-a-sample))
 
 ## Use cases
 
@@ -56,9 +57,9 @@ The preceding code binds a [Bootstrap tooltip widget](https://getbootstrap.com/d
 
 A Tag Helper Component must be added to the app's Tag Helper Components collection. There are three ways to add to the collection:
 
-1. [Registration via services container](#registration-via-services-container)
-1. [Registration via Razor file](#registration-via-razor-file)
-1. [Registration via Page Model or controller](#registration-via-page-model-or-controller)
+* [Registration via services container](#registration-via-services-container)
+* [Registration via Razor file](#registration-via-razor-file)
+* [Registration via Page Model or controller](#registration-via-page-model-or-controller)
 
 ### Registration via services container
 
@@ -105,8 +106,8 @@ In the preceding code:
 To create a custom Tag Helper Component:
 
 * Create a public class deriving from <xref:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper>.
-* Apply an [[HtmlTargetElement]](xref:Microsoft.AspNetCore.Razor.TagHelpers.HtmlTargetElementAttribute) attribute to the class. Specify the name of the target HTML element.
-* *Optional*: Apply an [[EditorBrowsable(EditorBrowsableState.Never)]](xref:System.ComponentModel.EditorBrowsableAttribute) attribute to the class to suppress the type's display in IntelliSense.
+* Apply an [`[HtmlTargetElement]`](xref:Microsoft.AspNetCore.Razor.TagHelpers.HtmlTargetElementAttribute) attribute to the class. Specify the name of the target HTML element.
+* *Optional*: Apply an [`[EditorBrowsable(EditorBrowsableState.Never)]`](xref:System.ComponentModel.EditorBrowsableAttribute) attribute to the class to suppress the type's display in IntelliSense.
 
 The following code creates a custom Tag Helper Component that targets the `<address>` HTML element:
 
@@ -118,7 +119,7 @@ Use the custom `address` Tag Helper Component to inject HTML markup as follows:
 public class AddressTagHelperComponent : TagHelperComponent
 {
     private readonly string _printableButton =
-        "<button type='button' class='btn btn-info' onclick=\"window.open("
+        "<button type='button' class='btn btn-info' onclick=\"window.open(" +
         "'https://binged.it/2AXRRYw')\">" +
         "<span class='glyphicon glyphicon-road' aria-hidden='true'></span>" +
         "</button>";

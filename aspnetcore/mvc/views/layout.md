@@ -3,7 +3,8 @@ title: Layout in ASP.NET Core
 author: ardalis
 description: Learn how to use common layouts, share directives, and run common code before rendering views in an ASP.NET Core app.
 ms.author: riande
-ms.date: 10/18/2018
+ms.date: 07/30/2019
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: mvc/views/layout
 ---
 # Layout in ASP.NET Core
@@ -27,44 +28,44 @@ Most web apps have a common layout that provides the user with a consistent expe
 
 ![Page Layout example](layout/_static/page-layout.png)
 
-Common HTML structures such as scripts and stylesheets are also frequently used by many pages within an app. All of these shared elements may be defined in a *layout* file, which can then be referenced by any view used within the app. Layouts reduce duplicate code in views, helping them follow the [Don't Repeat Yourself (DRY) principle](http://deviq.com/don-t-repeat-yourself/).
+Common HTML structures such as scripts and stylesheets are also frequently used by many pages within an app. All of these shared elements may be defined in a *layout* file, which can then be referenced by any view used within the app. Layouts reduce duplicate code in views.
 
-By convention, the default layout for an ASP.NET Core app is named *_Layout.cshtml*. The layout file for new ASP.NET Core projects created with the templates:
+By convention, the default layout for an ASP.NET Core app is named *_Layout.cshtml*. The layout files for new ASP.NET Core projects created with the templates are:
 
 * Razor Pages: *Pages/Shared/_Layout.cshtml*
 
-  ![pages folder in solutions explorer](layout/_static/rp-web-project-views.png)
+  ![Pages folder in Solution Explorer](layout/_static/rp-web-project-views.png)
 
 * Controller with views: *Views/Shared/_Layout.cshtml*
 
- ![views folder in solutions explorer](layout/_static/mvc-web-project-views.png)
+  ![Views folder in Solution Explorer](layout/_static/mvc-web-project-views.png)
 
 The layout defines a top level template for views in the app. Apps don't require a layout. Apps can define more than one layout, with different views specifying different layouts.
 
 The following code shows the layout file for a template created project with a controller and views:
 
-[!code-html[](~/common/samples/WebApplication1/Views/Shared/_Layout.cshtml?highlight=44,72)]
+[!code-cshtml[](~/common/samples/WebApplication1/Views/Shared/_Layout.cshtml?highlight=44,72)]
 
 ## Specifying a Layout
 
 Razor views have a `Layout` property. Individual views specify a layout by setting this property:
 
-[!code-html[](../../common/samples/WebApplication1/Views/_ViewStart.cshtml?highlight=2)]
+[!code-cshtml[](../../common/samples/WebApplication1/Views/_ViewStart.cshtml?highlight=2)]
 
-The layout specified can use a full path (for example, */Pages/Shared/_Layout.cshtml* or */Views/Shared/_Layout.cshtml*) or a partial name (example: `_Layout`). When a partial name is provided, the Razor view engine will search for the layout file using its standard discovery process. The folder where the handler method (or controller) exists is searched first, followed by the *Shared* folder. This discovery process is identical to the one used to discover [partial views](partial.md).
+The layout specified can use a full path (for example, */Pages/Shared/_Layout.cshtml* or */Views/Shared/_Layout.cshtml*) or a partial name (example: `_Layout`). When a partial name is provided, the Razor view engine searches for the layout file using its standard discovery process. The folder where the handler method (or controller) exists is searched first, followed by the *Shared* folder. This discovery process is identical to the process used to discover [partial views](xref:mvc/views/partial#partial-view-discovery).
 
 By default, every layout must call `RenderBody`. Wherever the call to `RenderBody` is placed, the contents of the view will be rendered.
 
 <a name="layout-sections-label"></a>
-
+<!-- https://stackoverflow.com/questions/23327578 -->
 ### Sections
 
 A layout can optionally reference one or more *sections*, by calling `RenderSection`. Sections provide a way to organize where certain page elements should be placed. Each call to `RenderSection` can specify whether that section is required or optional:
 
 ```html
-@section Scripts {
-    @RenderSection("Scripts", required: false)
-}
+<script type="text/javascript" src="~/scripts/global.js"></script>
+
+@RenderSection("Scripts", required: false)
 ```
 
 If a required section isn't found, an exception is thrown. Individual views specify the content to be rendered within a section using the `@section` Razor syntax. If a page or view defines a section, it must be rendered (or an error will occur).
@@ -73,7 +74,7 @@ An example `@section` definition in Razor Pages view:
 
 ```html
 @section Scripts {
-     <script type="text/javascript" src="/scripts/main.js"></script>
+     <script type="text/javascript" src="~/scripts/main.js"></script>
 }
 ```
 
@@ -103,7 +104,7 @@ The body and every section in a Razor page must be either rendered or ignored.
 
 ## Importing Shared Directives
 
-Views and pages can use Razor directives to importing namespaces and use [dependency injection](dependency-injection.md). Directives shared by many views may be specified in a common *_ViewImports.cshtml* file. The `_ViewImports` file supports the following directives:
+Views and pages can use Razor directives to import namespaces and use [dependency injection](dependency-injection.md). Directives shared by many views may be specified in a common *_ViewImports.cshtml* file. The `_ViewImports` file supports the following directives:
 
 * `@addTagHelper`
 * `@removeTagHelper`
@@ -117,7 +118,7 @@ The file doesn't support other Razor features, such as functions and section def
 
 A sample `_ViewImports.cshtml` file:
 
-[!code-html[](../../common/samples/WebApplication1/Views/_ViewImports.cshtml)]
+[!code-cshtml[](../../common/samples/WebApplication1/Views/_ViewImports.cshtml)]
 
 The *_ViewImports.cshtml* file for an ASP.NET Core MVC app is typically placed in the *Pages* (or *Views*) folder. A *_ViewImports.cshtml* file can be placed within any folder, in which case it will only be applied to pages or views within that folder and its subfolders. `_ViewImports` files are processed starting at the root level and then for each folder leading up to the location of the page or view itself. `_ViewImports` settings specified at the root level may be overridden at the folder level.
 
@@ -145,7 +146,7 @@ Code that needs to run before each view or page should be placed in the *_ViewSt
 
 A sample *_ViewStart.cshtml* file:
 
-[!code-html[](../../common/samples/WebApplication1/Views/_ViewStart.cshtml)]
+[!code-cshtml[](../../common/samples/WebApplication1/Views/_ViewStart.cshtml)]
 
 The file above specifies that all views will use the *_Layout.cshtml* layout.
 

@@ -3,8 +3,9 @@ title: Key management extensibility in ASP.NET Core
 author: rick-anderson
 description: Learn about ASP.NET Core Data Protection key management extensibility.
 ms.author: riande
-ms.custom: mvc
+ms.custom: "mvc, seodec18"
 ms.date: 10/24/2018
+no-loc: [cookie, Cookie, Blazor, "Blazor Server", "Blazor WebAssembly", "Identity", "Let's Encrypt", Razor, SignalR]
 uid: security/data-protection/extensibility/key-management
 ---
 # Key management extensibility in ASP.NET Core
